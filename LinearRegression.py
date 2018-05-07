@@ -41,7 +41,6 @@ class LinearRegreesion_OLS():
         if linalg.det(xTx) == 0.0:
             raise ValueError("Can't compute least-square solution, Please to add normalization")
         self.coef_ = xTx.I * (X.T * y)
-        self._set_intercept(self.X_off)
         return self
 
     def predict(self, X):
@@ -79,10 +78,10 @@ class LinearRegression_SGD():
     def fit(self, X, y, sample_weight=None):
         if sample_weight is not None and np.atleast_1d(sample_weight) > 1:
             raise ValueError("Sample weights must be 1D array or scalar")
-        if sample_weight is not None:
-            X, y = self.rescale_data(X, y, sample_weight)
         n_samples, n_features = X.shape
         X = np.c_[X, np.ones(n_samples)]
+        if sample_weight is not None:
+            X, y = self.rescale_data(X, y, sample_weight)
         self.coef_ = np.zeros(n_features + 1)
         # self.coef_ = np.zeros(n_features)
         # 迭代次数
